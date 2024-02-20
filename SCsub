@@ -7,6 +7,7 @@ import glob
 
 Import("env")
 
+env_steamaudio = env.Clone()
 
 def calculate_sha256(filepath, block_size=65536):
     sha256 = hashlib.sha256()
@@ -32,9 +33,9 @@ with zipfile.ZipFile(zip_name, "r") as zip_ref:
 
 os.remove(zip_name)
 
-env.add_source_files(env.modules_sources, "*.cpp")
 
-env.Append(CPPPATH=[os.path.join("external/steamaudio", "include")])
+env_steamaudio.add_source_files(env_steamaudio.modules_sources, "*.cpp")
+env_steamaudio.Append(CPPPATH=[os.path.join("external/steamaudio", "include")])
 
 lib_path = ""
 
@@ -58,9 +59,9 @@ def copy_libraries(lib_path, pattern, target_dir):
 
 if env["platform"] == "windows":
     lib_path = os.path.abspath("./external/steamaudio/lib/windows-x64")
-    if env.msvc:
+    if env_steamaudio.msvc:
         # https://github.com/godotengine/godot/issues/23687 Manually linking static libraries with MSVC appends Godot's LIBSUFFIX
-        env.Append(
+        env_steamaudio.Append(
             LIBS=[
                 File(
                     os.path.join(
@@ -75,18 +76,18 @@ if env["platform"] == "windows":
             ]
         )
     else:
-        env.Append(LIBPATH=[lib_path])
-        env.Append(LIBS=["phonon"])
+        env_steamaudio.Append(LIBPATH=[lib_path])
+        env_steamaudio.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.dll", target_bin_dir)
 elif env["platform"] == "macos":
     lib_path = os.path.abspath("./external/steamaudio/lib/osx")
-    env.Append(LIBPATH=[lib_path])
-    env.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
-    env.Append(LIBS=["phonon"])
+    env_steamaudio.Append(LIBPATH=[lib_path])
+    env_steamaudio.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
+    env_steamaudio.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.bundle", target_bin_dir)
 elif env["platform"] == "linux":
     lib_path = os.path.abspath("./external/steamaudio/lib/linux-x64")
-    env.Append(LIBPATH=[lib_path])
-    env.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
-    env.Append(LIBS=["phonon"])
+    env_steamaudio.Append(LIBPATH=[lib_path])
+    env_steamaudio.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
+    env_steamaudio.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.so", target_bin_dir)
