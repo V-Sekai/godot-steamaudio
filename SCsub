@@ -41,15 +41,17 @@ env_thirdparty.Append(CPPPATH=[os.path.join("external/steamaudio", "include")])
 
 lib_path = ""
 
-target_bin_dir = env.Dir('#bin').abspath
+target_bin_dir = env.Dir("#bin").abspath
+
 
 def copy_libraries(lib_path, pattern, target_dir):
     for file_path in glob.glob(os.path.join(lib_path, pattern)):
         shutil.copy(file_path, target_dir)
         print(f"Copied {file_path} to {target_dir}")
 
+
 if env["platform"] == "windows":
-    lib_path = os.path.join(os.getcwd(), "external/steamaudio/lib/windows-x64")    
+    lib_path = os.path.join(os.getcwd(), "external/steamaudio/lib/windows-x64")
     env.Append(LIBPATH=[lib_path])
     env.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.dll", target_bin_dir)
@@ -63,4 +65,6 @@ elif env["platform"] == "linux":
     copy_libraries(lib_path, "*.so", target_bin_dir)
 
 if env["platform"] in ["macos", "linux"]:
-    env_thirdparty.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
+    env_thirdparty.Append(
+        LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."]
+    )
