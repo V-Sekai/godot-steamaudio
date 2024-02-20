@@ -37,4 +37,4 @@ public:
 	~SteamAudioListener();
 };
 
-#endif // STEAMAUDIO_LISTENER
+#endif // STEAMAUDIO_LISTENER_H

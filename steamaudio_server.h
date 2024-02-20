@@ -68,4 +68,4 @@ public:
 	~SteamAudioServer();
 };
 
-#endif //STEAMAUDIO_SERVER_H
+#endif // STEAMAUDIO_SERVER_H
