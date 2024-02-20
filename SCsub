@@ -1,34 +1,22 @@
 import os
 Import('env')
 
-<<<<<<< HEAD
-env.add_source_files(env.modules_sources, "*.cpp")
-=======
 env.add_source_files(env.modules_sources, "*.cpp") 
->>>>>>> refs/subrepo/modules/godot_steamaudio/fetch
 
 env.Append(CPPPATH=["external/steamaudio/include"])
 
 lib_path = ""
 
-<<<<<<< HEAD
 if env["platform"] == "windows":
     lib_path = os.path.join(os.getcwd(), "external/steamaudio/lib/windows-x64")    
     env.Append(LIBPATH=[lib_path])
     env.Append(LIBS=["phonon"])
 elif env["platform"] == "macos":
-=======
-if env["platform"] == "macos":
->>>>>>> refs/subrepo/modules/godot_steamaudio/fetch
     lib_path = os.getcwd() + "/external/steamaudio/lib/osx"
     env.Append(LIBPATH=[lib_path])
 elif env["platform"] == "linux":
     lib_path = os.getcwd() + "/external/steamaudio/lib/linux-x64"
     env.Append(LIBPATH=[lib_path])
 
-<<<<<<< HEAD
 if env["platform"] in ["macos", "linux"]:
     env.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon",'-Wl,-rpath,\'$$ORIGIN\':.'])
-=======
-env.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon",'-Wl,-rpath,\'$$ORIGIN\':.'])
->>>>>>> refs/subrepo/modules/godot_steamaudio/fetch
