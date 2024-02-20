@@ -28,7 +28,7 @@ SOFTWARE.
 #include "core/object/ref_counted.h"
 #include "scene/3d/node_3d.h"
 #include "servers/audio/audio_stream.h"
-#include <phonon.h>
+#include "modules/godot_steamaudio/external/steamaudio/include/phonon.h"
 
 #define MAX_OCCLUSION_NUM_SAMPLES 16
 #define MAX_AMBISONICS_ORDER_DEFAULT 2
