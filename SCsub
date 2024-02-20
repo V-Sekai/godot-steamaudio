@@ -58,7 +58,7 @@ def copy_libraries(lib_path, pattern, target_dir):
 
 
 if env["platform"] == "windows":
-    lib_path = os.path.join(os.getcwd(), "external", "steamaudio", "lib", "windows-x64")
+    lib_path = os.path.abspath("./external/steamaudio/lib/windows-x64")
     if env.msvc:
         # https://github.com/godotengine/godot/issues/23687 Manually linking static libraries with MSVC appends Godot's LIBSUFFIX
         env.Append(
@@ -80,12 +80,12 @@ if env["platform"] == "windows":
         env.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.dll", target_bin_dir)
 elif env["platform"] == "macos":
-    lib_path = os.getcwd() + "/external/steamaudio/lib/osx"
+    lib_path = os.path.abspath("./external/steamaudio/lib/osx")
     env.Append(LIBPATH=[lib_path])
     env.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.bundle", target_bin_dir)
 elif env["platform"] == "linux":
-    lib_path = os.getcwd() + "/external/steamaudio/lib/linux-x64"
+    lib_path = os.path.abspath("./external/steamaudio/lib/linux-x64")
     env.Append(LIBPATH=[lib_path])
     env.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.so", target_bin_dir)
