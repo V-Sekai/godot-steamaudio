@@ -32,7 +32,7 @@ with zipfile.ZipFile(zip_name, "r") as zip_ref:
 
 os.remove(zip_name)
 
-env.add_source_files(env_thirdparty.modules_sources, "*.cpp")
+env.add_source_files(env.modules_sources, "*.cpp")
 
 env.Append(CPPPATH=[os.path.join("external/steamaudio", "include")])
 
