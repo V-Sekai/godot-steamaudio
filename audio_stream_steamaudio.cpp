@@ -33,7 +33,6 @@
 #include "audio_stream_steamaudio.h"
 #include "steamaudio_server.h"
 #include "scene/main/scene_tree.h"
-#include <unistd.h>
 
 Ref<AudioStreamPlayback> AudioStreamSteamAudio::instantiate_playback() {
 	Ref<AudioStreamPlaybackSteamAudio> playback;

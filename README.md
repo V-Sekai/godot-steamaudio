@@ -1,22 +1,18 @@
-ARCHIVED - With new responsibilities at my dayjob I do not personally have time to work on this or maintain it, but I hope it may serve as a decent launching point for others that wish to integrate Steam Audio with Godot or other engines. Steam Audio is really awesome tech, kudos to Valve!
-
-
 **Godot Steam&reg;Audio**
 
-This is a Godot 4.x module that adds support for Valve's Steam&reg; Audio SDK/Library for spatialization of sound in a 3D space. This module provides an integration with the Godot (4.x) game engine and is MIT-licensed (MODULELICENSE.md), but the Steam&reg; Audio SDK/Library itself is licensed under Valve's own license (VALVELICENCE.md) and thus if you use this module you are bound by Valve's terms.
+This is a Godot 4.3 module that adds support for Valve's Steam&reg; Audio SDK/Library for the spatialization of sound in a 3D space. This module provides an integration with the Godot (4.3) game engine and is MIT-licensed (MODULELICENSE.md), but the Steam&reg; Audio SDK/Library itself is licensed under Valve's Apache 2.0 license, and thus, if you use this module, you are bound by Valve's terms.
 
-You can find the Steam&reg; Audio Github page here: https://github.com/ValveSoftware/steam-audio
-You can also find the latest release here under "C API": https://valvesoftware.github.io/steam-audio/downloads.html
+You can find the Steam&reg; Audio Github page here: https://github.com/ValveSoftware/steam-audio. You can also see the latest release here under "C API": https://valvesoftware.github.io/steam-audio/downloads.html
 
-This repository itself (godot\_steamaudio) does not contain or host the Steam&reg; Audio SDK/Library. You will need to acquire this yourself via the above release link.
+This repository (godot-steam-audio) does not contain or host the Steam&reg; Audio SDK/Library. You will need to acquire this yourself via the above release link.
 
-***Building***
+**_Building_**
 
-As of this time this is a module, which means it must be compiled as you are building the Godot engine. Work is being done to move this module to the GDExtension framework to avoid the need to recompile the engine, however at this time there are several blockers related to the audio components exposed by https://github.com/godotengine/godot-cpp.
+This is a module, meaning it must be compiled as you build the Godot engine. Work is being done to move this module to the GDExtension framework to avoid the need to recompile the engine; however, at this time, there are several blockers related to the audio components exposed by https://github.com/godotengine/godot-cpp.
 
-At this time this repository only supports Linux builds. I will also work on Mac support. Contributions to get Windows support working would be greatly appreciated as I do not use Windows.
-If you are unfamiliar with compiling Godot from source, please read this guide first from the official docs: https://docs.godotengine.org/en/stable/contributing/development/compiling/index.html
-To get a Linux build going, clone or copy this repository into the Godot source's modules folder:
+At this time, this repository only supports Linux builds. I will also work on Mac support. Contributions to get Windows support working would be greatly appreciated as I do not use Windows.
+If you are unfamiliar with compiling Godot from source, please read this guide from the official docs: https://docs.godotengine.org/en/stable/contributing/development/compiling/index.html. To get a Linux build going, clone or copy this repository into the Godot source's modules folder:
+
 ```
 pushd godot/modules
 git clone git@github.com:ai/vespergamedev/godot_steamaudio.git .
@@ -24,13 +20,9 @@ popd
 ```
 
 Acquire the Steam&reg; Audio SDK/Library and place it in godot/modules/godot_steamaudio/external like so (replace the URL/version as needed):
-```
-wget https://github.com/ValveSoftware/steam-audio/releases/download/v4.5.2/steamaudio_4.5.2.zip
-mkdir -p godot/modules/godot_steamaudio/external/
-unzip steamaudio_4.5.2.zip -d godot/modules/godot_steamaudio/external/
-```
 
-Personally, I like to create a build directory to build the engine in that is separate from the main source directory. Here is a Makefile that builds the engine (it assumes you are executing it in a directoy above "godot"), release templates, and then places the Steam&reg; Audio Library in the final "bin" location. I've included it in the misc directory of this repository as reference. This uses clang/llvm but you can use gcc if you prefer.
+I like to create a build directory to build the engine in that is separate from the main source directory. Here is a Makefile that builds the engine (it assumes you are executing it in a directoy above "godot"), release templates, and then place the Steam&reg; Audio Library in the final "bin" location. I've included it in the misc directory of this repository as reference. This uses clang/llvm, but you can use gcc.
+
 ```
 BUILD_DIR=build
 GODOT_DIR=$(BUILD_DIR)/godot
@@ -68,15 +60,15 @@ clean:
 
 With a Makefile like this, you can simply run "make" in the directory above your godot source location. In this case, the final output will be in $(BUILD_DIR)/godot/bin. Feel free to adapt however you wish, this is a complete engine build of course and your own needs may require further customization.
 
-***Sample Project***
+**_Sample Project_**
 
 A sample project with multiple test scenes is available at https://github.com/vespergamedev/godot_steamaudio_sample_project
 
-***Current Status***
+**_Current Status_**
 
-At this time there is support for rendering 3D ambisonics, volumetric occlusion by geometry, transmission through geometry, and distance attenuation. 
+Currently, there is support for rendering 3D ambisonics, volumetric occlusion by geometry, transmission through geometry, and distance attenuation.
 
-***Road Map***
+**_Road Map_**
 
 1. Real-time Reflections (echoes caused by geometry) support via GPU or CPU ray-tracing
 2. Non-static geometry (moving objects) influencing the simulation

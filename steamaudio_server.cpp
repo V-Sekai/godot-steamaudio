@@ -179,7 +179,7 @@ void SteamAudioServer::indirect_worker(void *p_udata) {
     while (srv->running.load()) {
         {
             std::unique_lock<std::mutex> lock(srv->mtx);
-            srv->cv.wait(lock, [&]{ return srv->indirect_thread_processing.load() or not srv->running.load(); });
+            srv->cv.wait(lock, [&]{ return srv->indirect_thread_processing.load() || !srv->running.load(); });
             if (srv->running.load()==false)
                 continue;
             iplSimulatorRunReflections(srv->global_state.simulator);
