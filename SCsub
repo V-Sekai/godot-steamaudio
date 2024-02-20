@@ -44,7 +44,14 @@ target_bin_dir = env.Dir("#bin").abspath
 
 def copy_libraries(lib_path, pattern, target_dir):
     for file_path in glob.glob(os.path.join(lib_path, pattern)):
-        shutil.copy(file_path, target_dir)
+        target_path = os.path.join(target_dir, os.path.basename(file_path))
+        if os.path.isdir(file_path):
+            # Check if the directory exists and remove it if it does
+            if os.path.exists(target_path):
+                shutil.rmtree(target_path)
+            shutil.copytree(file_path, target_path)
+        else:
+            shutil.copy(file_path, target_dir)
         print(f"Copied {file_path} to {target_dir}")
 
 
@@ -56,10 +63,12 @@ if env["platform"] == "windows":
 elif env["platform"] == "macos":
     lib_path = os.getcwd() + "/external/steamaudio/lib/osx"
     env.Append(LIBPATH=[lib_path])
+    env.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.bundle", target_bin_dir)
 elif env["platform"] == "linux":
     lib_path = os.getcwd() + "/external/steamaudio/lib/linux-x64"
     env.Append(LIBPATH=[lib_path])
+    env.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.so", target_bin_dir)
 
 if env["platform"] in ["macos", "linux"]:
