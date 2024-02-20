@@ -4,8 +4,6 @@ This is a Godot 4.3 module that adds support for Valve's Steam® Audio SDK/Libra
 
 You can find the Steam® Audio Github page [here](https://github.com/ValveSoftware/steam-audio). You can also see the latest release here under "C API": [https://valvesoftware.github.io/steam-audio/downloads.html](https://valvesoftware.github.io/steam-audio/downloads.html)
 
-This repository (godot-steam-audio) does not contain or host the Steam® Audio SDK/Library. You will need to acquire this yourself via the above release link.
-
 ## Building
 
 This is a module, meaning it must be compiled as you build the Godot engine. Work is being done to move this module to the GDExtension framework to avoid the need to recompile the engine.
