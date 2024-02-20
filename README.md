@@ -1,74 +1,31 @@
-**Godot Steam&reg;Audio**
+# Godot Steam®Audio
 
-This is a Godot 4.3 module that adds support for Valve's Steam&reg; Audio SDK/Library for the spatialization of sound in a 3D space. This module provides an integration with the Godot (4.3) game engine and is MIT-licensed (MODULELICENSE.md), but the Steam&reg; Audio SDK/Library itself is licensed under Valve's Apache 2.0 license, and thus, if you use this module, you are bound by Valve's terms.
+This is a Godot 4.3 module that adds support for Valve's Steam® Audio SDK/Library for the spatialization of sound in a 3D space. This module provides an integration with the Godot (4.3) game engine and is MIT-licensed ([MODULELICENSE.md](MODULELICENSE.md)), but the Steam® Audio SDK/Library itself is licensed under Valve's Apache 2.0 license, and thus, if you use this module, you are bound by Valve's terms.
 
-You can find the Steam&reg; Audio Github page here: https://github.com/ValveSoftware/steam-audio. You can also see the latest release here under "C API": https://valvesoftware.github.io/steam-audio/downloads.html
+You can find the Steam® Audio Github page [here](https://github.com/ValveSoftware/steam-audio). You can also see the latest release here under "C API": [https://valvesoftware.github.io/steam-audio/downloads.html](https://valvesoftware.github.io/steam-audio/downloads.html)
 
-This repository (godot-steam-audio) does not contain or host the Steam&reg; Audio SDK/Library. You will need to acquire this yourself via the above release link.
+This repository (godot-steam-audio) does not contain or host the Steam® Audio SDK/Library. You will need to acquire this yourself via the above release link.
 
-**_Building_**
+## Building
 
-This is a module, meaning it must be compiled as you build the Godot engine. Work is being done to move this module to the GDExtension framework to avoid the need to recompile the engine; however, at this time, there are several blockers related to the audio components exposed by https://github.com/godotengine/godot-cpp.
+This is a module, meaning it must be compiled as you build the Godot engine. Work is being done to move this module to the GDExtension framework to avoid the need to recompile the engine.
 
-At this time, this repository only supports Linux builds. I will also work on Mac support. Contributions to get Windows support working would be greatly appreciated as I do not use Windows.
-If you are unfamiliar with compiling Godot from source, please read this guide from the official docs: https://docs.godotengine.org/en/stable/contributing/development/compiling/index.html. To get a Linux build going, clone or copy this repository into the Godot source's modules folder:
+At this time, this repository only supports Windows builds. Contributions to get Linux and Mac support working would be greatly appreciated.
+If you are unfamiliar with compiling Godot from source, please read this guide from the official docs: [Compiling Godot from Source](https://docs.godotengine.org/en/stable/contributing/development/compiling/index.html). To get a Windows build going, clone or copy this repository into the Godot source's modules folder:
 
-```
-pushd godot/modules
-git clone git@github.com:ai/vespergamedev/godot_steamaudio.git .
-popd
+```bash
+git clone https://github.com/V-Sekai/godot -b vsk-steam-audio-4.3 godot-steam-audio
 ```
 
-Acquire the Steam&reg; Audio SDK/Library and place it in godot/modules/godot_steamaudio/external like so (replace the URL/version as needed):
+## Sample Project
 
-I like to create a build directory to build the engine in that is separate from the main source directory. Here is a Makefile that builds the engine (it assumes you are executing it in a directoy above "godot"), release templates, and then place the Steam&reg; Audio Library in the final "bin" location. I've included it in the misc directory of this repository as reference. This uses clang/llvm, but you can use gcc.
+A sample project with multiple test scenes is available at [https://github.com/V-Sekai/godot_steamaudio_sample_project](https://github.com/V-Sekai/godot_steamaudio_sample_project)
 
-```
-BUILD_DIR=build
-GODOT_DIR=$(BUILD_DIR)/godot
-BUILD_TARGET=$(BUILD_DIR)/godot/bin/godot.linuxbsd.tools.64.llvm
-RELEASE_EXPORT_TEMPLATE=$(BUILD_DIR)/godot/export_templates/linux_x11_64_release
-DEBUG_EXPORT_TEMPLATE=$(BUILD_DIR)/godot/export_templates/linux_x11_64_debug
-NUM_PAR_JOBS=$(shell nproc)
-GODOT_BUILD_CMD=scons platform=linuxbsd use_llvm=yes use_lld=yes use_static_cpp=no -j$(NUM_PAR_JOBS) -Q VERBOSE=1
-
-default: $(BUILD_TARGET)
-
-$(BUILD_DIR):
-        mkdir -p $(BUILD_DIR)
-
-$(GODOT_DIR): $(BUILD_DIR)
-        cp -rfP godot $(BUILD_DIR)/.
-        mkdir -p $(GODOT_DIR)/export_templates
-
-$(RELEASE_EXPORT_TEMPLATE): $(GODOT_DIR)
-        cd $(GODOT_DIR) && $(GODOT_BUILD_CMD) tools=no target=template_release bits=64
-        mv $(GODOT_DIR)/bin/godot.linuxbsd.template_release.x86_64.llvm $(GODOT_DIR)/export_templates/linux_x11_64_release
-
-$(DEBUG_EXPORT_TEMPLATE): $(GODOT_DIR)
-        cd $(GODOT_DIR) && $(GODOT_BUILD_CMD) tools=no target=template_debug bits=64
-        mv $(GODOT_DIR)/bin/godot.linuxbsd.template_debug.x86_64.llvm $(GODOT_DIR)/export_templates/linux_x11_64_debug
-
-$(BUILD_TARGET): $(GODOT_DIR) $(RELEASE_EXPORT_TEMPLATE) $(DEBUG_EXPORT_TEMPLATE)
-        cd $(GODOT_DIR) && $(GODOT_BUILD_CMD)
-        cp -rfP $(GODOT_DIR)/modules/godot_steamaudio/external/steamaudio/lib/linux-x64/* $(BUILD_DIR)/godot/bin/.
-
-clean:
-        rm -rf $(BUILD_DIR)
-
-```
-
-With a Makefile like this, you can simply run "make" in the directory above your godot source location. In this case, the final output will be in $(BUILD_DIR)/godot/bin. Feel free to adapt however you wish, this is a complete engine build of course and your own needs may require further customization.
-
-**_Sample Project_**
-
-A sample project with multiple test scenes is available at https://github.com/vespergamedev/godot_steamaudio_sample_project
-
-**_Current Status_**
+## Current Status
 
 Currently, there is support for rendering 3D ambisonics, volumetric occlusion by geometry, transmission through geometry, and distance attenuation.
 
-**_Road Map_**
+## Road Map
 
 1. Real-time Reflections (echoes caused by geometry) support via GPU or CPU ray-tracing
 2. Non-static geometry (moving objects) influencing the simulation
