@@ -25,9 +25,9 @@ popd
 
 Acquire the Steam&reg; Audio SDK/Library and place it in godot/modules/godot_steamaudio/external like so (replace the URL/version as needed):
 ```
-wget https://github.com/ValveSoftware/steam-audio/releases/download/v4.1.4/steamaudio_4.1.4.zip
+wget https://github.com/ValveSoftware/steam-audio/releases/download/v4.5.2/steamaudio_4.5.2.zip
 mkdir -p godot/modules/godot_steamaudio/external/
-unzip steamaudio_4.1.4.zip -d godot/modules/godot_steamaudio/external/
+unzip steamaudio_4.5.2.zip -d godot/modules/godot_steamaudio/external/
 ```
 
 Personally, I like to create a build directory to build the engine in that is separate from the main source directory. Here is a Makefile that builds the engine (it assumes you are executing it in a directoy above "godot"), release templates, and then places the Steam&reg; Audio Library in the final "bin" location. I've included it in the misc directory of this repository as reference. This uses clang/llvm but you can use gcc if you prefer.
