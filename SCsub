@@ -25,9 +25,7 @@ urllib.request.urlretrieve(steam_audio_url, zip_name)
 
 actual_hash = calculate_sha256(zip_name)
 if actual_hash != expected_hash:
-    raise ValueError(
-        f"Downloaded file hash mismatch: expected {expected_hash}, got {actual_hash}"
-    )
+    raise ValueError(f"Downloaded file hash mismatch: expected {expected_hash}, got {actual_hash}")
 
 with zipfile.ZipFile(zip_name, "r") as zip_ref:
     zip_ref.extractall(destination_dir)
@@ -65,6 +63,4 @@ elif env["platform"] == "linux":
     copy_libraries(lib_path, "*.so", target_bin_dir)
 
 if env["platform"] in ["macos", "linux"]:
-    env_thirdparty.Append(
-        LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."]
-    )
+    env_thirdparty.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
