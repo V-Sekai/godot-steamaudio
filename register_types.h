@@ -53,6 +53,7 @@ SOFTWARE.
 ******************************************************************************/
 
 /* register_types.h */
+
 #ifndef GODOT_STEAMAUDIO_REGISTER_TYPES_H
 #define GODOT_STEAMAUDIO_REGISTER_TYPES_H
 
