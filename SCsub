@@ -39,8 +39,9 @@ env_thirdparty.Append(CPPPATH=[os.path.join("external/steamaudio", "include")])
 
 lib_path = ""
 
-target_bin_dir = env.Dir("#bin").abspath
-
+target_bin_dir = os.path.join("..", "..", "bin")
+if not os.path.exists(target_bin_dir):
+    os.makedirs(target_bin_dir)
 
 def copy_libraries(lib_path, pattern, target_dir):
     for file_path in glob.glob(os.path.join(lib_path, pattern)):
