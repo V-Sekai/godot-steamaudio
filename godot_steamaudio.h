@@ -47,8 +47,13 @@ inline int num_samps_for_duration(float duration, int sampling_rate) {
 inline Vector3 IPLVec3toGDVec3(IPLVector3 vec_in) {
     return Vector3{vec_in.x,vec_in.y,vec_in.z};
 }
+
 inline IPLVector3 GDVec3toIPLVec3(Vector3 vec_in) { 
-    return IPLVector3{vec_in.x,vec_in.y,vec_in.z};
+    return IPLVector3{
+        static_cast<IPLfloat32>(vec_in.x),
+        static_cast<IPLfloat32>(vec_in.y),
+        static_cast<IPLfloat32>(vec_in.z)
+    };
 }
 
 struct SteamAudioSource {
