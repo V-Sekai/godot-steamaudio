@@ -71,7 +71,6 @@ struct EffectSteamAudio {
     IPLAmbisonicsDecodeEffectSettings ambisonics_dec_settings{};
     IPLAmbisonicsEncodeEffectSettings ambisonics_enc_settings{};
 
-
 //Effects
     IPLBinauralEffect binaural_effect = nullptr;
     IPLDirectEffect direct_effect = nullptr;
@@ -195,4 +194,5 @@ int init_effect_steamaudio(GlobalStateSteamAudio& global_state, EffectSteamAudio
 int deinit_global_state_steamaudio(GlobalStateSteamAudio& global_state);
 int deinit_local_state_steamaudio(GlobalStateSteamAudio& global_state, LocalStateSteamAudio& local_state);
 int deinit_effect_steamaudio(GlobalStateSteamAudio& global_state, EffectSteamAudio& effect);
+
 #endif // GODOT_STEAMAUDIO_H
