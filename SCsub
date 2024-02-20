@@ -91,6 +91,4 @@ elif env["platform"] == "linux":
     copy_libraries(lib_path, "*.so", target_bin_dir)
 
 if env["platform"] in ["macos", "linux"]:
-    env_thirdparty.Append(
-        LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."]
-    )
+    env_thirdparty.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
