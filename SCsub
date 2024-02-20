@@ -3,6 +3,7 @@ import urllib.request
 import zipfile
 import hashlib
 import shutil
+import glob
 
 Import("env")
 
@@ -40,44 +41,26 @@ env_thirdparty.Append(CPPPATH=[os.path.join("external/steamaudio", "include")])
 
 lib_path = ""
 
-target_bin_dir = "#bin"
+target_bin_dir = env.Dir('#bin').abspath
 
+def copy_libraries(lib_path, pattern, target_dir):
+    for file_path in glob.glob(os.path.join(lib_path, pattern)):
+        shutil.copy(file_path, target_dir)
+        print(f"Copied {file_path} to {target_dir}")
 
-if env_thirdparty["platform"] == "windows":
-    lib_path = os.path.join(os.getcwd(), destination_dir, "lib/windows-x64")
-    env_thirdparty.Append(LIBPATH=[lib_path])
-    env_thirdparty.Append(LIBS=["phonon"])
-    
-    source_dll_path = os.path.join(lib_path, "*.dll")
-
-    if not os.path.exists(target_bin_dir):
-        os.makedirs(target_bin_dir)
-    
-    for dll_file in Glob(source_dll_path):
-        shutil.copy(dll_file, target_bin_dir)
-
+if env["platform"] == "windows":
+    lib_path = os.path.join(os.getcwd(), "external/steamaudio/lib/windows-x64")    
+    env.Append(LIBPATH=[lib_path])
+    env.Append(LIBS=["phonon"])
+    copy_libraries(lib_path, "*.dll", target_bin_dir)
 elif env["platform"] == "macos":
-    lib_path = os.path.join(os.getcwd(), destination_dir, "lib/osx")
-    env_thirdparty.Append(LIBPATH=[lib_path])
-    
-    source_phonon_bundle = os.path.join(lib_path, "phonon.bundle")
-    
-    if not os.path.exists(target_bin_dir):
-        os.makedirs(target_bin_dir)
-        
-    shutil.copy(source_phonon_bundle, target_bin_dir)
-
+    lib_path = os.getcwd() + "/external/steamaudio/lib/osx"
+    env.Append(LIBPATH=[lib_path])
+    copy_libraries(lib_path, "*.bundle", target_bin_dir)
 elif env["platform"] == "linux":
-    lib_path = os.path.join(os.getcwd(), destination_dir, "lib/linux-x64")
-    env_thirdparty.Append(LIBPATH=[lib_path])
-    
-    source_libphonon_so = os.path.join(lib_path, "libphonon.so")
-    
-    if not os.path.exists(target_bin_dir):
-        os.makedirs(target_bin_dir)
-    
-    shutil.copy(source_libphonon_so, target_bin_dir)
-
+    lib_path = os.getcwd() + "/external/steamaudio/lib/linux-x64"
+    env.Append(LIBPATH=[lib_path])
+    copy_libraries(lib_path, "*.so", target_bin_dir)
 
 if env["platform"] in ["macos", "linux"]:
     env_thirdparty.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
