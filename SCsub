@@ -2,6 +2,7 @@ import os
 import urllib.request
 import zipfile
 import hashlib
+import shutil
 
 Import("env")
 
@@ -32,22 +33,51 @@ with zipfile.ZipFile(zip_name, "r") as zip_ref:
 
 os.remove(zip_name)
 
-env.add_source_files(env.modules_sources, "*.cpp")
+env_thirdparty = env.Clone()
+env_thirdparty.add_source_files(env_thirdparty.modules_sources, "*.cpp")
 
-env.Append(CPPPATH=[os.path.join("external/steamaudio", "include")])
+env_thirdparty.Append(CPPPATH=[os.path.join("external/steamaudio", "include")])
 
 lib_path = ""
 
-if env["platform"] == "windows":
+target_bin_dir = "#bin"
+
+
+if env_thirdparty["platform"] == "windows":
     lib_path = os.path.join(os.getcwd(), destination_dir, "lib/windows-x64")
-    env.Append(LIBPATH=[lib_path])
-    env.Append(LIBS=["phonon"])
+    env_thirdparty.Append(LIBPATH=[lib_path])
+    env_thirdparty.Append(LIBS=["phonon"])
+    
+    source_dll_path = os.path.join(lib_path, "*.dll")
+
+    if not os.path.exists(target_bin_dir):
+        os.makedirs(target_bin_dir)
+    
+    for dll_file in Glob(source_dll_path):
+        shutil.copy(dll_file, target_bin_dir)
+
 elif env["platform"] == "macos":
     lib_path = os.path.join(os.getcwd(), destination_dir, "lib/osx")
-    env.Append(LIBPATH=[lib_path])
+    env_thirdparty.Append(LIBPATH=[lib_path])
+    
+    source_phonon_bundle = os.path.join(lib_path, "phonon.bundle")
+    
+    if not os.path.exists(target_bin_dir):
+        os.makedirs(target_bin_dir)
+        
+    shutil.copy(source_phonon_bundle, target_bin_dir)
+
 elif env["platform"] == "linux":
     lib_path = os.path.join(os.getcwd(), destination_dir, "lib/linux-x64")
-    env.Append(LIBPATH=[lib_path])
+    env_thirdparty.Append(LIBPATH=[lib_path])
+    
+    source_libphonon_so = os.path.join(lib_path, "libphonon.so")
+    
+    if not os.path.exists(target_bin_dir):
+        os.makedirs(target_bin_dir)
+    
+    shutil.copy(source_libphonon_so, target_bin_dir)
+
 
 if env["platform"] in ["macos", "linux"]:
-    env.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
+    env_thirdparty.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
