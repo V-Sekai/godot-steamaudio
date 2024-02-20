@@ -1,8 +1,17 @@
-# SCsub
 import os
 Import('env')
 
-env.add_source_files(env.modules_sources, "*.cpp") # Add all cpp files to the build
+env.add_source_files(env.modules_sources, "*.cpp") 
+
 env.Append(CPPPATH=["external/steamaudio/include"])
-env.Append(LIBPATH=[os.getcwd() + "/external/steamaudio/lib/linux-x64"])
-env.Append(LINKFLAGS=["-lphonon",'-Wl,-rpath,\'$$ORIGIN\':.'])
+
+lib_path = ""
+
+if env["platform"] == "macos":
+    lib_path = os.getcwd() + "/external/steamaudio/lib/osx"
+    env.Append(LIBPATH=[lib_path])
+elif env["platform"] == "linux":
+    lib_path = os.getcwd() + "/external/steamaudio/lib/linux-x64"
+    env.Append(LIBPATH=[lib_path])
+
+env.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon",'-Wl,-rpath,\'$$ORIGIN\':.'])
