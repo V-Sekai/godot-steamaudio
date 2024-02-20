@@ -33,11 +33,11 @@
 #ifndef AUDIO_STREAM_PLAYER_STEAMAUDIO_H
 #define AUDIO_STREAM_PLAYER_STEAMAUDIO_H
 
+#include "audio_stream_steamaudio.h"
 #include "core/templates/safe_refcount.h"
+#include "godot_steamaudio.h"
 #include "scene/3d/node_3d.h"
 #include "servers/audio/audio_stream.h"
-#include "audio_stream_steamaudio.h"
-#include "godot_steamaudio.h"
 class AudioStreamPlayerSteamAudio : public Node3D {
 	GDCLASS(AudioStreamPlayerSteamAudio, Node3D);
 
@@ -113,7 +113,7 @@ public:
 	bool has_stream_playback();
 	Ref<AudioStreamPlaybackSteamAudio> get_stream_playback();
 
-        bool init_source_steamaudio();
+	bool init_source_steamaudio();
 
 	AudioStreamPlayerSteamAudio();
 	~AudioStreamPlayerSteamAudio();

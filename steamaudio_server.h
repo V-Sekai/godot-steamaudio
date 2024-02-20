@@ -29,42 +29,43 @@ SOFTWARE.
 #include "core/os/thread.h"
 #include "godot_steamaudio.h"
 #include "steamaudio_listener.h"
-#include <mutex>
 #include <atomic>
 #include <condition_variable>
+#include <mutex>
 
 class SteamAudioServer : public Object {
-    GDCLASS(SteamAudioServer, Object);
-    static SteamAudioServer * singleton;
-    static void indirect_worker(void *p_udata);
+	GDCLASS(SteamAudioServer, Object);
+	static SteamAudioServer *singleton;
+	static void indirect_worker(void *p_udata);
+
 private:
-    GlobalStateSteamAudio global_state;
-    std::mutex mtx;
-    std::condition_variable cv;
-    std::atomic<bool> running;
-    std::atomic<bool> indirect_thread_processing;
-    Thread indirect_thread;
-    std::atomic<bool> global_state_initialized;
-    SteamAudioListener * listener = nullptr;
-    Vector<LocalStateSteamAudio*> local_states;
-//Shared Data: SteamAudio Simulator Inputs
-    
+	GlobalStateSteamAudio global_state;
+	std::mutex mtx;
+	std::condition_variable cv;
+	std::atomic<bool> running;
+	std::atomic<bool> indirect_thread_processing;
+	Thread indirect_thread;
+	std::atomic<bool> global_state_initialized;
+	SteamAudioListener *listener = nullptr;
+	Vector<LocalStateSteamAudio *> local_states;
+	//Shared Data: SteamAudio Simulator Inputs
+
 protected:
-    static void _bind_methods();
+	static void _bind_methods();
 
 public:
-    static SteamAudioServer * get_singleton();
-    Error init();
-    void finish();
-    void tick();
-    bool register_listener(SteamAudioListener * rx);
-    bool deregister_listener();
-    bool add_source(LocalStateSteamAudio * local_state);
-    bool remove_source(LocalStateSteamAudio * local_state);
-    GlobalStateSteamAudio* clone_global_state();    
-    
-    SteamAudioServer();
-    ~SteamAudioServer();
+	static SteamAudioServer *get_singleton();
+	Error init();
+	void finish();
+	void tick();
+	bool register_listener(SteamAudioListener *rx);
+	bool deregister_listener();
+	bool add_source(LocalStateSteamAudio *local_state);
+	bool remove_source(LocalStateSteamAudio *local_state);
+	GlobalStateSteamAudio *clone_global_state();
+
+	SteamAudioServer();
+	~SteamAudioServer();
 };
 
 #endif //STEAMAUDIO_SERVER_H

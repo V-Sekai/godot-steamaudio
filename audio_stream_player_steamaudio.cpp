@@ -319,12 +319,12 @@ Ref<AudioStreamPlaybackSteamAudio> AudioStreamPlayerSteamAudio::get_stream_playb
 }
 
 bool AudioStreamPlayerSteamAudio::init_source_steamaudio() {
-    for (Ref<AudioStreamPlaybackSteamAudio> &playback : stream_playbacks) {
-        bool success = playback->init_source_steamaudio(this);
-        if (!success)
-            return false;
-    }
-    return true;
+	for (Ref<AudioStreamPlaybackSteamAudio> &playback : stream_playbacks) {
+		bool success = playback->init_source_steamaudio(this);
+		if (!success)
+			return false;
+	}
+	return true;
 }
 
 void AudioStreamPlayerSteamAudio::_bind_methods() {
@@ -385,7 +385,7 @@ void AudioStreamPlayerSteamAudio::_bind_methods() {
 
 AudioStreamPlayerSteamAudio::AudioStreamPlayerSteamAudio() {
 	AudioServer::get_singleton()->connect("bus_layout_changed", callable_mp(this, &AudioStreamPlayerSteamAudio::_bus_layout_changed));
-        set_disable_scale(true);
+	set_disable_scale(true);
 }
 
 AudioStreamPlayerSteamAudio::~AudioStreamPlayerSteamAudio() {

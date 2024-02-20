@@ -34,8 +34,8 @@
 #define AUDIO_STREAM_STEAMAUDIO_H
 
 #include "core/templates/local_vector.h"
-#include "servers/audio/audio_stream.h"
 #include "godot_steamaudio.h"
+#include "servers/audio/audio_stream.h"
 
 class AudioStreamSteamAudio : public AudioStream {
 	GDCLASS(AudioStreamSteamAudio, AudioStream)
@@ -58,8 +58,9 @@ class AudioStreamPlaybackSteamAudio : public AudioStreamPlayback {
 	GDCLASS(AudioStreamPlaybackSteamAudio, AudioStreamPlayback)
 	friend class AudioStreamSteamAudio;
 
-        float mix_rate;
-        int latency;
+	float mix_rate;
+	int latency;
+
 protected:
 	enum {
 		INTERNAL_BUFFER_LEN = 128,
@@ -77,13 +78,13 @@ protected:
 		float prev_volume_db = 0;
 		float volume_db = 0;
 		uint32_t id = 0;
-                EffectSteamAudio effect;
+		EffectSteamAudio effect;
 		Stream() :
 				active(false), pending_play(false), finish_request(false) {}
 	};
 
-        GlobalStateSteamAudio* global_state;
-        LocalStateSteamAudio local_state;
+	GlobalStateSteamAudio *global_state;
+	LocalStateSteamAudio local_state;
 	LocalVector<Stream> streams;
 	bool active = false;
 	uint32_t id_counter = 1;
@@ -116,11 +117,10 @@ public:
 	bool is_stream_playing(ID p_stream_id) const;
 	void stop_stream(ID p_stream_id);
 
-        bool init_source_steamaudio(AudioStreamPlayerSteamAudio * player);
-
+	bool init_source_steamaudio(AudioStreamPlayerSteamAudio *player);
 
 	AudioStreamPlaybackSteamAudio();
-        ~AudioStreamPlaybackSteamAudio();
+	~AudioStreamPlaybackSteamAudio();
 };
 
 #endif // AUDIO_STREAM_STEAMAUDIO_H

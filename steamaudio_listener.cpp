@@ -28,9 +28,9 @@ void SteamAudioListener::_bind_methods() {
 }
 
 SteamAudioListener::SteamAudioListener() {
-    SteamAudioServer::get_singleton()->register_listener(this);
+	SteamAudioServer::get_singleton()->register_listener(this);
 }
 
 SteamAudioListener::~SteamAudioListener() {
-    SteamAudioServer::get_singleton()->deregister_listener();
+	SteamAudioServer::get_singleton()->deregister_listener();
 }

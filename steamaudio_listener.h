@@ -28,12 +28,13 @@ SOFTWARE.
 #include "scene/3d/node_3d.h"
 class SteamAudioListener : public Node3D {
 	GDCLASS(SteamAudioListener, Node3D);
+
 protected:
-        static void _bind_methods();
+	static void _bind_methods();
+
 public:
 	SteamAudioListener();
 	~SteamAudioListener();
 };
-
 
 #endif // STEAMAUDIO_LISTENER

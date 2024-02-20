@@ -25,43 +25,43 @@ SOFTWARE.
 /* register_types.cpp */
 
 #include "register_types.h"
-#include "core/object/class_db.h"
-#include "audio_stream_steamaudio.h"
 #include "audio_stream_player_steamaudio.h"
+#include "audio_stream_steamaudio.h"
+#include "core/object/class_db.h"
+#include "steamaudio_geometry.h"
 #include "steamaudio_listener.h"
 #include "steamaudio_server.h"
-#include "steamaudio_geometry.h"
 
 static SteamAudioServer *steamaudio_server = nullptr;
 
 void initialize_godot_steamaudio_module(ModuleInitializationLevel p_level) {
-    if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE && p_level != MODULE_INITIALIZATION_LEVEL_SERVERS) {
-        return;
-    }
+	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE && p_level != MODULE_INITIALIZATION_LEVEL_SERVERS) {
+		return;
+	}
 
-    if (p_level==MODULE_INITIALIZATION_LEVEL_SCENE) {
-        ClassDB::register_class<AudioStreamSteamAudio>();
-        ClassDB::register_class<AudioStreamPlaybackSteamAudio>();
-        ClassDB::register_class<AudioStreamPlayerSteamAudio>();
-        ClassDB::register_class<SteamAudioListener>();
-        ClassDB::register_class<SteamAudioGeometry>();
-    }
+	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+		ClassDB::register_class<AudioStreamSteamAudio>();
+		ClassDB::register_class<AudioStreamPlaybackSteamAudio>();
+		ClassDB::register_class<AudioStreamPlayerSteamAudio>();
+		ClassDB::register_class<SteamAudioListener>();
+		ClassDB::register_class<SteamAudioGeometry>();
+	}
 
-    if (p_level==MODULE_INITIALIZATION_LEVEL_SERVERS) {
-        steamaudio_server = memnew(SteamAudioServer);
-        steamaudio_server->init();
-        GDREGISTER_CLASS(SteamAudioServer);
-        Engine::get_singleton()->add_singleton(Engine::Singleton("SteamAudioServer", SteamAudioServer::get_singleton()));
-    }
+	if (p_level == MODULE_INITIALIZATION_LEVEL_SERVERS) {
+		steamaudio_server = memnew(SteamAudioServer);
+		steamaudio_server->init();
+		GDREGISTER_CLASS(SteamAudioServer);
+		Engine::get_singleton()->add_singleton(Engine::Singleton("SteamAudioServer", SteamAudioServer::get_singleton()));
+	}
 }
 
-void uninitialize_godot_steamaudio_module(ModuleInitializationLevel p_level){
-    if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE && p_level != MODULE_INITIALIZATION_LEVEL_SERVERS) {
-        return;
-    }
-    if (p_level==MODULE_INITIALIZATION_LEVEL_SERVERS) {
-        if (steamaudio_server) {
-            memdelete(steamaudio_server);
-        }
-    }
+void uninitialize_godot_steamaudio_module(ModuleInitializationLevel p_level) {
+	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE && p_level != MODULE_INITIALIZATION_LEVEL_SERVERS) {
+		return;
+	}
+	if (p_level == MODULE_INITIALIZATION_LEVEL_SERVERS) {
+		if (steamaudio_server) {
+			memdelete(steamaudio_server);
+		}
+	}
 }

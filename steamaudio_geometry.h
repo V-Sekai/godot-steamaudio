@@ -25,23 +25,24 @@ SOFTWARE.
 #ifndef STEAMAUDIO_GEOMETRY_H
 #define STEAMAUDIO_GEOMETRY_H
 
+#include "scene/3d/mesh_instance_3d.h"
 #include "scene/3d/node_3d.h"
 #include "steamaudio_server.h"
-#include "scene/3d/mesh_instance_3d.h"
 class SteamAudioGeometry : public Node3D {
-    GDCLASS(SteamAudioGeometry, Node3D);
-public:
-    SteamAudioGeometry();
-    ~SteamAudioGeometry();
-    int register_geometry();
-    int deregister_geometry();
-    int create_geometry(const Ref<Mesh> mesh, Transform3D mesh_global_transform);
-    int destroy_geometry();
-    static void _bind_methods();
-private:
-    GlobalStateSteamAudio * global_state = nullptr;
-    Vector<IPLStaticMesh> static_meshes;
-};
+	GDCLASS(SteamAudioGeometry, Node3D);
 
+public:
+	SteamAudioGeometry();
+	~SteamAudioGeometry();
+	int register_geometry();
+	int deregister_geometry();
+	int create_geometry(const Ref<Mesh> mesh, Transform3D mesh_global_transform);
+	int destroy_geometry();
+	static void _bind_methods();
+
+private:
+	GlobalStateSteamAudio *global_state = nullptr;
+	Vector<IPLStaticMesh> static_meshes;
+};
 
 #endif // STEAMAUDIO_GEOMETRY_H
