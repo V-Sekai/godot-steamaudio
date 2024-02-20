@@ -31,16 +31,16 @@
 //Above notice retained as this is largely based on AudioStreamPolyphonic
 
 #include "audio_stream_steamaudio.h"
-#include "steamaudio_server.h"
 #include "scene/main/scene_tree.h"
+#include "steamaudio_server.h"
 
 Ref<AudioStreamPlayback> AudioStreamSteamAudio::instantiate_playback() {
 	Ref<AudioStreamPlaybackSteamAudio> playback;
 	playback.instantiate();
 	playback->streams.resize(polyphony);
-        for (uint32_t i = 0; i < playback->streams.size(); i++) {
-            init_effect_steamaudio(*(playback->global_state),playback->streams[i].effect);
-        }
+	for (uint32_t i = 0; i < playback->streams.size(); i++) {
+		init_effect_steamaudio(*(playback->global_state), playback->streams[i].effect);
+	}
 	return playback;
 }
 
@@ -71,8 +71,6 @@ AudioStreamSteamAudio::AudioStreamSteamAudio() {
 }
 
 ////////////////////////
-
-
 
 void AudioStreamPlaybackSteamAudio::start(double p_from_pos) {
 	if (active) {
@@ -131,25 +129,25 @@ void AudioStreamPlaybackSteamAudio::tag_used_streams() {
 
 int AudioStreamPlaybackSteamAudio::mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) {
 	if (!active) {
-            return 0;
+		return 0;
 	}
-        if (!local_state.source.source_initialized) {
-            return 0;
-        }
+	if (!local_state.source.source_initialized) {
+		return 0;
+	}
 
 	// Pre-clear buffer.
 	for (int i = 0; i < p_frames; i++) {
 		p_buffer[i] = AudioFrame(0, 0);
 	}
-        SimOutputsSteamAudio * sim_outputs = &(local_state.sim_outputs);
+	SimOutputsSteamAudio *sim_outputs = &(local_state.sim_outputs);
 
-        //If either output is invalid, we'll skip
-        bool direct_valid = sim_outputs->direct_valid[get_read_direct_idx(sim_outputs)];
-        bool indirect_valid = sim_outputs->indirect_valid[get_read_indirect_idx(sim_outputs)];
+	//If either output is invalid, we'll skip
+	bool direct_valid = sim_outputs->direct_valid[get_read_direct_idx(sim_outputs)];
+	bool indirect_valid = sim_outputs->indirect_valid[get_read_indirect_idx(sim_outputs)];
 
-        if (!direct_valid || !indirect_valid) {
-            return p_frames;
-        }
+	if (!direct_valid || !indirect_valid) {
+		return p_frames;
+	}
 	for (Stream &s : streams) {
 		if (!s.active.is_set()) {
 			continue;
@@ -170,30 +168,31 @@ int AudioStreamPlaybackSteamAudio::mix(AudioFrame *p_buffer, float p_rate_scale,
 			s.stream_playback->start(s.play_offset);
 			s.pending_play.clear();
 		}
-                memset(local_state.work_buffer,0,sizeof(AudioFrame)*global_state->buffer_size);
-                int mixed = s.stream_playback->mix(local_state.work_buffer, s.pitch_scale, p_frames); 
-                if (mixed==p_frames) {
-                    spatialize_steamaudio(*global_state, local_state, s.effect);
-                }
- 
-               for (int i = 0; i < p_frames; i++) {
-                    p_buffer[i] += volume*local_state.work_buffer[i];
-                }
-                if (mixed<p_frames) {
-                    s.active.clear();
-                }
-                
+		for (size_t i = 0; i < global_state->buffer_size; ++i) {
+			local_state.work_buffer[i] = {};
+		}
+		int mixed = s.stream_playback->mix(local_state.work_buffer, s.pitch_scale, p_frames);
+		if (mixed == p_frames) {
+			spatialize_steamaudio(*global_state, local_state, s.effect);
+		}
+
+		for (int i = 0; i < p_frames; i++) {
+			p_buffer[i] += volume * local_state.work_buffer[i];
+		}
+		if (mixed < p_frames) {
+			s.active.clear();
+		}
+
 		if (s.finish_request.is_set()) {
 			s.active.clear();
 		}
 	}
 
-
 	return p_frames;
 }
 
 AudioStreamPlaybackSteamAudio::ID AudioStreamPlaybackSteamAudio::play_stream(const Ref<AudioStream> &p_stream, float p_from_offset, float p_volume_db, float p_pitch_scale) {
-        ERR_FAIL_COND_V(local_state.source.source_initialized==false, INVALID_ID);
+	ERR_FAIL_COND_V(local_state.source.source_initialized == false, INVALID_ID);
 	ERR_FAIL_COND_V(p_stream.is_null(), INVALID_ID);
 	for (uint32_t i = 0; i < streams.size(); i++) {
 		if (!streams[i].active.is_set()) {
@@ -257,19 +256,19 @@ void AudioStreamPlaybackSteamAudio::stop_stream(ID p_stream_id) {
 	s->finish_request.set();
 }
 
-bool AudioStreamPlaybackSteamAudio::init_source_steamaudio(AudioStreamPlayerSteamAudio * player) {
-    local_state.source.steamaudio_player = player;
-    IPLSourceSettings source_settings{};
-    source_settings.flags = static_cast<IPLSimulationFlags>(IPL_SIMULATIONFLAGS_DIRECT|IPL_SIMULATIONFLAGS_REFLECTIONS);
-    
-    IPLerror errorCode = iplSourceCreate(global_state->simulator, &source_settings, &(local_state.source.src));
-    if (errorCode) {
-        printf("Err code for iplSourceCreate: %d\n", errorCode);
-        return false;
-    } 
-    SteamAudioServer::get_singleton()->add_source(&(local_state));
-    local_state.source.source_initialized = true;
-    return true;
+bool AudioStreamPlaybackSteamAudio::init_source_steamaudio(AudioStreamPlayerSteamAudio *player) {
+	local_state.source.steamaudio_player = player;
+	IPLSourceSettings source_settings{};
+	source_settings.flags = static_cast<IPLSimulationFlags>(IPL_SIMULATIONFLAGS_DIRECT | IPL_SIMULATIONFLAGS_REFLECTIONS);
+
+	IPLerror errorCode = iplSourceCreate(global_state->simulator, &source_settings, &(local_state.source.src));
+	if (errorCode) {
+		printf("Err code for iplSourceCreate: %d\n", errorCode);
+		return false;
+	}
+	SteamAudioServer::get_singleton()->add_source(&(local_state));
+	local_state.source.source_initialized = true;
+	return true;
 }
 
 void AudioStreamPlaybackSteamAudio::_bind_methods() {
@@ -282,14 +281,14 @@ void AudioStreamPlaybackSteamAudio::_bind_methods() {
 }
 
 AudioStreamPlaybackSteamAudio::AudioStreamPlaybackSteamAudio() {
-    global_state = SteamAudioServer::get_singleton()->clone_global_state();
-    init_local_state_steamaudio(*global_state,local_state);
+	global_state = SteamAudioServer::get_singleton()->clone_global_state();
+	init_local_state_steamaudio(*global_state, local_state);
 }
 
 AudioStreamPlaybackSteamAudio::~AudioStreamPlaybackSteamAudio() {
-    SteamAudioServer::get_singleton()->remove_source(&(local_state));
-    for (uint32_t i = 0; i < streams.size(); i++) {
-            deinit_effect_steamaudio(*global_state,streams[i].effect);
-    }
-    deinit_local_state_steamaudio(*global_state,local_state);
+	SteamAudioServer::get_singleton()->remove_source(&(local_state));
+	for (uint32_t i = 0; i < streams.size(); i++) {
+		deinit_effect_steamaudio(*global_state, streams[i].effect);
+	}
+	deinit_local_state_steamaudio(*global_state, local_state);
 }
