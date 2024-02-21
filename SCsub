@@ -89,6 +89,3 @@ elif env["platform"] == "linux":
     env.Append(LINKFLAGS=[f"-L{lib_path}", "-lphonon", "-Wl,-rpath,'$$ORIGIN':."])
     env.Append(LIBS=["phonon"])
     copy_libraries(lib_path, "*.so", target_bin_dir)
-    env["use_static_cpp"] = False
-    env["use_llvm"] = True
-    env["use_lld"] = True
